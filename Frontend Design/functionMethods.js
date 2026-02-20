@@ -39,3 +39,22 @@ function sayWeather(temperature, windSpeed, humidity){
 
 console.log(sayWeather(32, '42mph', '30 g/m³'))
 console.log(sayWeather.apply(person, [32, '42mph', '30 g/m³']))
+
+// 3. Function.prototype.bind
+// bind() -> const newFunction = functionName.bind(thisArg, arg1, arg2, ...)
+
+
+// Returns a new function with this permanently set. It does NOT execute immediately.
+/*
+1. Does NOT run immediately
+2. Returns a new function
+3. Can preset arguments (partial application)
+*/
+function locationTemperature(temperature, location){
+    return `Hello ${this.name}!, the temperature in ${location} today is ${temperature}°C.`
+}
+
+const bindFunc = locationTemperature.bind(person);
+
+console.log(bindFunc(-12, 'France'));
+console.log(bindFunc(25, 'Barcelona'));
