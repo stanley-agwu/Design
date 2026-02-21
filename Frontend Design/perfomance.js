@@ -96,3 +96,56 @@ function throttle(fn, interval) {
     }
   };
 }
+
+// Example Throttle
+
+function handleScroll() {
+  console.log("Scroll Y:", window.scrollY);
+}
+
+window.addEventListener("scroll", throttle(handleScroll, 200));
+
+
+// Throttle (Trailing Option)
+/*
+This ensures:
+1. Leading execution
+2. Trailing execution
+*/
+function throttleT(fn, interval) {
+  let lastTime = 0;
+  let timer;
+
+  return function (...args) {
+    const now = Date.now();
+    const remaining = interval - (now - lastTime);
+
+    if (remaining <= 0) {
+      clearTimeout(timer);
+      timer = null;
+      lastTime = now;
+      fn.apply(this, args);
+    } else if (!timer) {
+      timer = setTimeout(() => {
+        lastTime = Date.now();
+        timer = null;
+        fn.apply(this, args);
+      }, remaining);
+    }
+  };
+}
+
+
+// Performance Enhancements -> With debounce/throttle:
+/*
+1. CPU usage drops (From reduced scroll, mousemove, keypress events).
+2. Network usage drops (From unneccessary/multitude of API calls).
+3. Layout thrashing reduced.
+4. Battery usage reduced.
+*/
+
+// Summary
+/*
+Debouncing delays execution until activity stops.
+Throttling limits execution rate during activity.
+*/
