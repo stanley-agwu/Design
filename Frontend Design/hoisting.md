@@ -183,7 +183,6 @@ sayHi();     // TypeError
 
 Because only the variable is hoisted, not the function body.
 
-
 #### Deep Internal Structure of Execution Context
 Each Execution Context contains:
     1. Variable Environment
@@ -204,4 +203,169 @@ Stores:
 3. Scope Chain
 Used to resolve variables from outer scopes.
 
+#### Advanced Example
+var x = 1;
 
+function foo() {
+    console.log(x);
+    var x = 2;
+}
+
+foo();
+
+What happens?
+
+1. Creation Phase of `foo`:
+x → undefined
+
+2. Execution:
+console.log(x) → undefined
+x = 2
+
+Output:
+undefined
+
+NOT `1`.
+
+Because local `x` shadows global `x`.
+
+Visual Timeline
+
+For:
+console.log(a);
+let a = 10;
+
+Timeline:
+Creation Phase:
+a → uninitialized (TDZ)
+
+Execution Phase:
+console.log(a) → ReferenceError
+
+#### JavaScript works like this:
+1. Parse file
+2. Create Global Execution Context
+3. Hoist declarations into memory
+4. Execute code line by line
+5. Push new contexts on function calls
+6. Pop them when finished
+
+#### Summary Table
+|---------------------------------------------------------------------------------------|
+| Type                 | Hoisted?      | Initialized?  | Accessible before declaration? |
+| -------------------- | ------------- | ------------- | ------------------------------ |
+| var                  | Yes           | undefined     | Yes                            |
+| let                  | Yes           | No (TDZ)      | No                             |
+| const                | Yes           | No (TDZ)      | No                             |
+| function declaration | Yes           | Full function | Yes                            |
+| function expression  | Only variable | undefined     | No                             |
+|---------------------------------------------------------------------------------------|
+
+#### Summary
+Execution Context is the environment in which JavaScript code runs. It is 
+created in two phases (creation and execution), managed via the call stack, 
+and during the creation phase, variable and function declarations are hoisted 
+into memory.
+
+#### Advanced Example Solution ->
+var x = 1;
+
+function foo() {
+    console.log(x);
+    var x = 2;
+}
+
+foo();
+
+
+- Solution
+- Explanation using execution context + hoisting.
+
+Step 1: Global Execution Context (Creation Phase)
+
+var x = 1;
+
+function foo() {
+    console.log(x);
+    var x = 2;
+}
+
+During the creation phase of the Global Execution Context:
+Memory becomes:
+
+x → undefined
+foo → function definition
+
+Then execution phase assigns:
+x = 1
+
+Step 2: Calling `foo()`
+
+When:
+foo();
+
+A new Function Execution Context (FEC) is created for `foo`.
+
+1. Creation Phase of `foo`
+Inside `foo`, JavaScript scans:
+
+function foo() {
+    console.log(x);
+    var x = 2;
+}
+
+It sees:
+var x;
+
+So in memory inside `foo`:
+x → undefined
+
+NOTE: This "shadows" the global `x`.
+
+Important:
+    The function internally becomes:
+
+function foo() {
+    var x;          hoisted
+    console.log(x);
+    x = 2;
+}
+
+Step 3: Execution Phase of `foo`
+
+Now line by line:
+Line 1:
+    console.log(x);
+Which `x`?
+    The "local x", not global.
+And local `x` is currently:
+    undefined
+So it prints:
+    undefined
+
+Line 2:
+    x = 2;
+Now local `x` becomes 2.
+
+Function ends.
+
+
+NOTE: -> Why NOT 1?
+
+Because of "variable shadowing".
+The local `var x` inside `foo` takes priority over the global `x`.
+Even though the assignment happens later, the declaration is hoisted to the 
+top of the function.
+
+#### Summary
+Inside `foo`, JS treats it like:
+
+function foo() {
+    var x = undefined; hoisted
+    console.log(x);
+    x = 2;
+}
+
+Final Solution
+    undefined
+Because the local `var x` is hoisted and shadows the global `x`.
