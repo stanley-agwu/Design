@@ -81,3 +81,127 @@ a = 10;
 So output:
 undefined
 
+#### The Call Stack
+Execution contexts are managed using a Call Stack (LIFO).
+
+Example:
+
+function one() {
+    two();
+}
+
+function two() {
+    console.log("Two");
+}
+
+one();
+
+Call Stack Order:
+
+1. Global Context pushed
+2. `one()` pushed
+3. `two()` pushed
+4. `two()` popped
+5. `one()` popped
+6. Global popped
+
+
+#### Hoisting Explained Properly
+Hoisting means:
+    -> During the creation phase, declarations are moved to memory before execution.
+
+NOTE: Important:
+-> Only declarations are hoisted, not initializations.
+-> Hoisting happens before code execution.
+
+#### Example 1. var Hoisting
+console.log(a);
+var a = 5;
+
+Internally becomes:
+
+var a;          // hoisted
+console.log(a); // undefined
+a = 5;
+
+Output:
+undefined
+
+Because `a` is hoisted and initialized with `undefined` during creation phase.
+
+#### Example 2. let and const Hoisting
+
+console.log(a);
+let a = 5;
+
+This throws:
+ReferenceError
+
+Why?
+
+Because `let` and `const` are hoisted BUT NOT initialized.
+
+They stay in something called:
+    Temporal Dead Zone (TDZ)
+
+TDZ is the time between:
+    Start of scope → until variable initialization
+
+Example:
+{
+    console.log(a); ReferenceError
+    let a = 10;
+}
+
+Even though `a` is hoisted, it’s in TDZ until execution reaches:
+    let a = 10;
+
+#### Example 3. Function Hoisting
+1. Function Declaration
+
+sayHi();
+
+function sayHi() {
+    console.log("Hi");
+}
+
+Works because:
+    -> Entire function is hoisted with body.
+
+2. Function Expression
+
+sayHi();
+
+var sayHi = function() {
+    console.log("Hi");
+};
+
+Internally:
+
+var sayHi;   // undefined
+sayHi();     // TypeError
+
+Because only the variable is hoisted, not the function body.
+
+
+#### Deep Internal Structure of Execution Context
+Each Execution Context contains:
+    1. Variable Environment
+    2. Lexical Environment
+    3. This Binding
+
+1. Variable Environment
+Stores:
+    1. var variables
+    2. function declarations
+
+2. Lexical Environment
+Stores:
+    1. let
+    2. const
+    3. block scope
+
+3. Scope Chain
+Used to resolve variables from outer scopes.
+
+
