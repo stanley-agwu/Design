@@ -111,3 +111,103 @@ export function App() {
 <img src="/gallery/1.jpg" loading="lazy" alt="Gallery item" />
 ```
 
+### 6. Bundle Splitting
+Breaking JS into smaller chunks so users download only what they need.
+
+Typical forms:
+
+1. Route-based splitting (most common)
+2. Component-based splitting
+3. Vendor splitting (careful; can backfire if misused)
+
+#### Example (dynamic import)
+
+```ts
+async function openEditor() {
+  const { Editor } = await import("./heavy/Editor");
+  Editor.mount("#modal");
+}
+```
+
+### 7. Critical CSS
+Inlining the minimal CSS needed for **above-the-fold** content, loading the rest later.
+
+#### Example: inline critical CSS + async load main CSS
+
+```html
+<style>
+  /* critical above-the-fold styles */
+  body { margin: 0; font-family: system-ui; }
+  .hero { min-height: 60vh; display: grid; place-items: center; }
+</style>
+
+<link rel="preload" href="/styles.css" as="style" />
+<link rel="stylesheet" href="/styles.css" media="print" onload="this.media='all'" />
+<noscript><link rel="stylesheet" href="/styles.css"></noscript>
+```
+
+### 8. Essential State Model
+The minimum data needed for what should be in app state vs derived vs server state.
+
+A common “essential state” rule:
+
+1. Store minimal source of truth
+2. Prefer derived state computed from it
+3. Keep server state separate (cache + invalidation)
+4. Avoid duplicating the same truth in multiple places
+
+#### Example: derived state instead of storing it
+
+```ts
+type CartItem = { id: string; price: number; qty: number };
+
+const cart: CartItem[] = [
+  { id: "a", price: 10, qty: 2 },
+  { id: "b", price: 5, qty: 1 },
+];
+
+// Derived: don't store total separately unless you must
+const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+```
+
+Server state tip: use a server-cache library (e.g., RTQ Query, TanStack Query) rather than stuffing fetched data into UI state.
+
+### 9. Reducer Pattern
+A predictable way to update state: (state, action) → newState.
+Great for complex UI flows, forms, wizards, undo/redo, etc.
+
+#### Example
+
+```ts
+type State = { count: number };
+type Action =
+  | { type: "inc" }
+  | { type: "dec" }
+  | { type: "add"; amount: number };
+
+function reducer(state: State, action: Action): State {
+  switch (action.type) {
+    case "inc": return { count: state.count + 1 };
+    case "dec": return { count: state.count - 1 };
+    case "add": return { count: state.count + action.amount };
+    default: return state;
+  }
+}
+```
+
+### 10. Windowing (Virtualization)
+Rendering only the visible subset of a large list/grid to keep the DOM small and fast.
+
+#### Example idea: render only visible rows
+
+```ts
+function getVisibleRange(scrollTop: number, rowHeight: number, viewportHeight: number) {
+  const start = Math.floor(scrollTop / rowHeight);
+  const end = Math.ceil((scrollTop + viewportHeight) / rowHeight);
+  return { start, end };
+}
+```
+
+Use intersection observer.
+In practice we’d typically use a virtualization lib (e.g., react-window) to handle edge cases smoothly.
+
