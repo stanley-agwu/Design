@@ -211,3 +211,90 @@ function getVisibleRange(scrollTop: number, rowHeight: number, viewportHeight: n
 Use intersection observer.
 In practice we’d typically use a virtualization lib (e.g., react-window) to handle edge cases smoothly.
 
+### 11. Server-Side Rendering (SSR)
+Render HTML on the server for the initial request, then the client “takes over”.
+
+Benefits:
+1. Faster first content for users (often better LCP)
+2. Better SEO for content pages
+3. More consistent performance on slow devices
+
+Tradeoffs:
+1. More server cost/complexity
+2. Must manage hydration and server/client boundaries
+
+#### Example (conceptual SSR)
+
+```ts
+// Server: render to HTML string
+const html = renderToString(<App url={req.url} />);
+res.send(`<!doctype html><div id="root">${html}</div><script src="/client.js"></script>`);
+```
+
+### 12. Partial Pre-rendering (PPR)
+A hybrid: pre-render the static shell ahead of time, but stream / fill dynamic parts at request time.
+
+Think: “Static where possible, dynamic where needed.”
+
+#### Example mental model
+1. Pre-render: header, layout, marketing content
+2. Request-time: user-specific cart, recommendations
+
+This improves performance while keeping personalization.
+
+### 13. Rehydration (Hydration)
+After SSR sends HTML, the client loads JS and attaches event listeners/state so the page becomes interactive.
+
+Hydration mismatch risk: if server HTML differs from what client expects, you get warnings or re-render.
+
+Example mismatch source
+
+```ts
+// BAD for SSR: non-deterministic values on render
+const id = Math.random(); // server ≠ client
+```
+
+Better approach:
+1. Generate deterministic output on server
+2. Or compute random/time-based things inside effects on the client
+
+### 14. Server Components
+Components that run on the server (not shipped to the browser), can access server resources directly, and send serialized UI output to the client.
+
+Benefits:
+1. Smaller client bundles (less JS shipped)
+2. Direct data access on server without exposing secrets
+3. Better performance for data-heavy pages
+
+Example (conceptual)
+
+```ts
+// Runs on server: can read DB, filesystem, secrets
+export async function ProductList() {
+  const products = await db.products.findMany();
+  return (
+    <ul>
+      {products.map(p => <li key={p.id}>{p.name}</li>)}
+    </ul>
+  );
+}
+```
+
+Client components are used where interactivity is needed (buttons, local state, drag/drop, etc.).
+
+### 15. Microfrontends
+Splitting a frontend into independently built/deployed parts owned by different teams (like microservices but for UI).
+
+Approaches:
+1. Build-time integration (monorepo packages)
+2. Runtime integration (Module Federation)
+3. iFrame (usually last resort)
+
+#### Example: Module Federation (conceptual)
+
+* `shell` app loads `checkout` remote at runtime.
+* Teams deploy `checkout` independently without redeploying `shell`.
+
+Tradeoffs:
+1. Gives Team autonomy, independent deploys
+2. Harder shared design/system consistency, routing, performance (duplicate dependencies)
