@@ -159,3 +159,107 @@ Promise.any([
 ##### Output
 B
 
+### Async / Await
+async/await is syntactic sugar over Promises.
+
+#### Basic Example
+
+```js
+async function fetchData() {
+    return "Hello";
+}
+
+fetchData().then(console.log);
+```
+
+An async function always returns a Promise.
+
+#### Using Await
+
+```js
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function run() {
+    console.log("Start");
+    await delay(1000);
+    console.log("After 1 second");
+}
+
+run();
+```
+
+### Error Handling
+
+```js
+async function test() {
+    try {
+        const data = await fetchUser();
+        console.log(data);
+    } catch (err) {
+        console.error(err);
+    }
+}
+```
+
+- Equivalent to .then().catch().
+
+### Important: Async Execution Model
+JavaScript is:
+    Single-threaded, non-blocking, event-loop driven.
+
+There are:
+1. Call Stack
+2. Web APIs
+3. Callback Queue/Task Queue/Macro-task Queue
+4. Microtask Queue (Promises live here)
+
+#### Example -> What will be the output
+
+```js
+console.log("1");
+
+setTimeout(() => console.log("2"), 0);
+
+Promise.resolve().then(() => console.log("3"));
+
+console.log("4");
+```
+
+#### Output:
+1
+4
+3
+2
+
+Why?
+
+#### Order of execution:
+Synchronous code → 1
+Synchronous code → 4
+Microtasks (Promises) → 3
+Macrotasks (setTimeout) → 2
+
+NOTE: Promise callbacks run before setTimeout.
+
+### Advanced Interview Comparison
+------------------------------------------------------------------|
+| Feature            | Callback | Promise     | Async/Await       |
+| ------------------ | -------- | ----------- | ----------------- |
+| Readability        | Low      | Medium      | High              |
+| Error handling     | Manual   | .catch()    | try/catch         |
+| Chaining           | Nested   | Flat chain  | Sequential        |
+| Parallel execution | Hard     | Promise.all | await Promise.all |
+------------------------------------------------------------------|
+
+### When to Use What?
+1. Simple async → Callback
+2. Complex chaining → Promise
+3. Clean readable async code → Async/Await
+4. Parallel tasks → Promise.all + await
+
+### Quick Ultimate Mental Model
+1. Callback → "Call me later"
+2. Promise → "I promise to give you result"
+3. Async/Await → "Wait here until promise resolves"
