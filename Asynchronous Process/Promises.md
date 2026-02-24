@@ -81,3 +81,81 @@ fetchUser()
     .catch(err => console.error(err));
 ```
 
+### Promise Static Methods
+These are methods on the Promise constructor.
+
+#### Promise.resolve()
+Creates resolved promise.
+
+```js
+Promise.resolve(42)
+    .then(value => console.log(value));
+```
+
+#### Promise.reject()
+
+```js
+Promise.reject("Error")
+    .catch(err => console.log(err));
+```
+
+#### Promise.all()
+1. Waits for all promises to succeed.
+2. If one fails → entire thing fails.
+
+```js
+Promise.all([
+    fetchUser(),
+    fetchOrders(),
+    fetchPayments()
+])
+.then(results => console.log(results))
+.catch(err => console.log(err));
+```
+
+#### Promise.allSettled()
+Waits for all promises, regardless of success/failure.
+
+```js
+Promise.allSettled([
+    Promise.resolve("A"),
+    Promise.reject("B")
+])
+.then(results => console.log(results));
+```
+
+##### Output
+
+```js
+[
+  { status: "fulfilled", value: "A" },
+  { status: "rejected", reason: "B" }
+]
+```
+
+#### Promise.race()
+Returns first settled promise (success or fail).
+
+```js
+Promise.race([
+    slowRequest(),
+    fastRequest()
+])
+.then(result => console.log(result));
+```
+
+#### Promise.any()
+1. Returns first fulfilled promise.
+2. Fails only if ALL fail.
+
+```js
+Promise.any([
+    Promise.reject("A"),
+    Promise.resolve("B"),
+])
+.then(result => console.log(result));
+```
+
+##### Output
+B
+
