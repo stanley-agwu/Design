@@ -76,3 +76,76 @@ but it is in TDZ → ReferenceError.
 Key Difference ->
 With `var` → prints `undefined`
 With `let` → throws `ReferenceError`
+
+### Hoisting Q3.
+What is result of the following code execution?
+
+```js
+var x = 1;
+
+function foo() {
+    console.log(x);
+    if (true) {
+        var x = 2;
+    }
+}
+
+foo();
+```
+
+### Solution Q3.
+Output:
+    `undefined`
+Why?
+    Because `var` is "function-scoped", not block-scoped.
+JS internally transforms it to:
+
+```js
+function foo() {
+    var x;        // hoisted to function top
+    console.log(x);
+    if (true) {
+        x = 2;
+    }
+}
+```
+
+So `x` inside `foo` shadows global `x`.
+At time of logging:
+
+`x === undefined`
+
+
+### Hoisting Q4.
+What is result of the following code execution?
+
+```js
+var x = 1;
+
+function foo(x) {
+    console.log(x);
+    var x = 2;
+}
+
+foo();
+```
+
+### Solution Q4.
+output
+    `undefined`
+Why?
+    Because parameters are also part of function scope.
+
+Internally becomes:
+
+```js
+function foo(x) {
+    var x;       // ignored because already declared
+    console.log(x);
+    x = 2;
+}
+```
+
+Since no argument is passed:
+`x === undefined`
+
