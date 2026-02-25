@@ -149,3 +149,60 @@ function foo(x) {
 Since no argument is passed:
 `x === undefined`
 
+### Hoisting Q5.
+What is result of the following code execution?
+
+```js
+let x = 1;
+
+function foo() {
+    console.log(x);
+    {
+        let x = 2;
+    }
+}
+
+foo();
+```
+
+### Solution Q5.
+Output:
+    `1`
+Because block-scoped `x` does NOT affect outer one.
+
+
+### Hoisting Q6.
+What is result of the following code execution?
+
+```js
+var x = 1;
+
+function foo() {
+    console.log(x);
+    x = 2;
+    var x;
+}
+
+foo();
+```
+
+### Solution Q6.
+Output:
+    `undefined`
+Even though assignment comes before `var`.
+Because hoisting makes it:
+
+```js
+function foo() {
+    var x;
+    console.log(x);
+    x = 2;
+}
+```
+
+*NOTE: ->*
+-> JavaScript resolves variables lexically.
+
+-> `var` → function-scoped
+-> `let/const` → block-scoped
+-> Hoisting happens before code execution.
