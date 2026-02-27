@@ -84,3 +84,278 @@ The optimization comes from:
 The Virtual DOM is an in-memory JavaScript representation of the real DOM that allows frameworks to efficiently compute UI changes and apply minimal updates to the actual DOM for better performance.
 
 
+### 2. IIFE
+IIFE (Immediately Invoked Function Expression) is deeply connected to scope, closures, and encapsulation — especially important before ES6 modules existed.
+
+#### What is an IIFE?
+An **IIFE** is a function that:
+
+1. Is defined as an expression
+2. Is executed immediately after it is created
+
+##### Basic Syntax
+
+```js
+(function () {
+    console.log("I run immediately!");
+})();
+```
+
+Or with arrow function:
+
+```js
+(() => {
+    console.log("I also run immediately!");
+})();
+```
+
+##### Why Do We Need the Parentheses?
+Normally this is a **function declaration**:
+
+```js
+function greet() {}
+```
+
+But this is a **function expression**:
+
+```js
+(function greet() {})
+```
+
+Wrapping it in parentheses forces JavaScript to treat it as an expression.
+Then the final `()` executes it immediately.
+
+So structurally:
+
+```js
+(function() {})()
+```
+
+means:
+1. Create function expression
+2. Immediately call it
+
+#### Core Purpose of IIFE
+The main purpose:
+1. Create a private scope
+2. Avoid polluting the global scope
+3. Simulate modules (before ES6 modules)
+
+##### Use Case #1 — Avoid Global Scope Pollution
+Without IIFE:
+
+```js
+var counter = 0;
+
+function increment() {
+    counter++;
+}
+```
+
+Everything is global.
+
+Now with IIFE:
+
+```js
+(function () {
+    var counter = 0;
+
+    function increment() {
+        counter++;
+        console.log(counter);
+    }
+
+    increment();
+})();
+```
+
+Now:
+- `counter` is private
+- `increment` is private
+- Nothing leaks to global scope
+
+This was extremely important before ES6 `let`, `const`, and modules.
+
+##### Use Case #2 — Data Privacy (Encapsulation)
+You can return only what you want exposed:
+
+```js
+const Counter = (function () {
+    let count = 0;
+
+    return {
+        increment() {
+            count++;
+        },
+        getCount() {
+            return count;
+        }
+    };
+})();
+
+Counter.increment();
+console.log(Counter.getCount()); // 1
+```
+
+Here:
+- `count` is private
+- Only selected methods are public
+
+This is the **Module Pattern**.
+
+##### Use Case #3 — Capture Loop Variables (Before let)
+Before `let`, `var` caused scope problems.
+
+Problem:
+
+```js
+for (var i = 0; i < 3; i++) {
+    setTimeout(() => {
+        console.log(i);
+    }, 100);
+}
+```
+
+Output:
+
+```
+3
+3
+3
+```
+
+Fix with IIFE:
+
+```js
+for (var i = 0; i < 3; i++) {
+    (function (index) {
+        setTimeout(() => {
+            console.log(index);
+        }, 100);
+    })(i);
+}
+```
+
+Output:
+
+```
+0
+1
+2
+```
+
+The IIFE creates a new scope for each iteration.
+
+Today, we use:
+
+```js
+for (let i = 0; i < 3; i++) {
+```
+
+But historically, IIFE was critical.
+
+##### Use Case #4 — Initialization Code
+Sometimes you want code to run once immediately:
+
+```js
+(function initApp() {
+    console.log("App initialized");
+})();
+```
+
+Used in:
+1. Script bootstrapping
+2. Configuration setup
+3. Environment detection
+
+##### IIFE With Parameters
+You can pass arguments:
+
+```js
+(function (name) {
+    console.log(`Hello ${name}`);
+})("Stammer");
+```
+
+##### IIFE and Closures
+IIFE creates closure naturally:
+
+```js
+const add = (function () {
+    let base = 10;
+
+    return function (num) {
+        return base + num;
+    };
+})();
+
+console.log(add(5)); // 15
+```
+
+`base` stays alive due to closure.
+
+##### Async IIFE (Modern Use Case)
+Useful when using `await` outside of modules:
+
+```js
+(async function () {
+    const response = await fetch("https://api.example.com");
+    const data = await response.json();
+    console.log(data);
+})();
+```
+
+Very common in:
+1. Node.js scripts
+2. Testing
+3. REPL environments
+
+#### Execution Context View
+When an IIFE runs:
+
+1. A new execution context is created
+2. It gets its own:
+   - Variable Environment
+   - Lexical Environment
+3. After execution:
+   - The function scope disappears
+   - Unless closures reference it
+
+This is why it’s powerful for isolation.
+
+#### Comparison With Modern Alternatives
+|-------------------------------------------------------|
+| Feature           | IIFE              | ES6 Modules   |
+| ----------------- | ------------------|---------------|
+| Scope isolation   | YES               | YES           |
+| Private variables | YES               | YES           |
+| Import/export     | NO                | YES           |
+| Recommended today | NO, Mostly legacy | YES           |
+|-------------------------------------------------------|
+
+Today:
+1. Prefer ES Modules
+2. Prefer `let` / `const`
+3. Prefer block scope
+
+But IIFE is still useful for:
+1. Immediate async execution
+2. Legacy codebases
+3. Script isolation in browsers
+
+#### Common Variations
+These are all valid:
+
+```js
+(function(){})()
+(function(){}())
+!function(){}()
++function(){}()
+```
+
+They all force expression context.
+
+##### Summary
+An IIFE is a function expression that executes immediately after creation. It is used to create a private scope, avoid global namespace pollution, implement the module pattern, and manage closures — especially before ES6 modules and block scoping were introduced.
+
+
