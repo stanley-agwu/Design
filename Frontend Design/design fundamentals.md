@@ -359,3 +359,93 @@ They all force expression context.
 An IIFE is a function expression that executes immediately after creation. It is used to create a private scope, avoid global namespace pollution, implement the module pattern, and manage closures — especially before ES6 modules and block scoping were introduced.
 
 
+### 3. ES Modules
+**ES Modules (ECMAScript Modules)** are the official JavaScript standard for organizing and sharing code between files using `import` and `export`.
+
+They allow you to split code into reusable, maintainable modules with **explicit dependencies**.
+
+#### Basic Syntax
+
+##### Exporting
+
+```js
+// math.js
+export const add = (a, b) => a + b;
+
+export function multiply(a, b) {
+  return a * b;
+}
+```
+
+##### Importing
+
+```js
+// app.js
+import { add, multiply } from "./math.js";
+
+console.log(add(2, 3));
+```
+
+#### Default Export
+
+```js
+// logger.js
+export default function log(message) {
+  console.log(message);
+}
+```
+
+Import:
+
+```js
+import log from "./logger.js";
+```
+
+#### Key Characteristics
+1. Static structure (imports are resolved at compile time)
+2. Supports tree-shaking
+3. Strict mode by default
+4. File-based modularity
+5. Asynchronous loading in browsers
+
+#### Tree-shaking
+Tree-shaking is a build-time optimization that removes unused exports from your final JavaScript bundle.
+
+It works with ES Modules because their static import/export structure lets bundlers (like Webpack, Rollup, Vite) analyze which code is actually used.
+
+In short:
+Tree-shaking eliminates dead code to reduce bundle size and improve performance.
+
+#### ES Modules vs CommonJS
+|------------------------------------------------------------------|
+| Feature      | ES Modules             | CommonJS                 |
+| ------------ | ---------------------- | ------------------------ |
+| Syntax       | `import/export`        | `require/module.exports` |
+| Loading      | Static                 | Dynamic                  |
+| Execution    | Asynchronous (browser) | Synchronous              |
+| Tree-shaking | YES                    | NO                       |
+| Default in   | Modern JS, browsers    | Node.js (legacy)         |
+|------------------------------------------------------------------|
+
+#### In Browsers
+
+```html
+<script type="module" src="app.js"></script>
+```
+
+#### In Node.js
+Enable via:
+
+* `.mjs` extension
+* or `"type": "module"` in `package.json`
+
+#### Why ES Modules Matter
+1. Better code organization
+2. Better performance via tree-shaking
+3. Cleaner dependency graph
+4. Standardized across browsers and Node
+
+#### Summary
+ES Modules are the standardized JavaScript module system that uses `import` and `export` to structure code into reusable, maintainable, and statically analyzable modules.
+
+
