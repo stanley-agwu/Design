@@ -819,3 +819,29 @@ It is simply:
 A function + its preserved lexical environment.
 
 
+### 6. Server-Side Rendering
+|-----------------------------------------------------------------------|
+|   CLIENT-SIDE RENDERING (CSR)	        | SERVER-SIDE RENDERING (SSR)   |
+|-----------------------------------------------------------------------|
+|HTML is rendered on the client         |HTML is rendered on the server |
+|(the user’s computer) using JavaScript	|(the developer’s computer)     |
+|-----------------------------------------------------------------------|
+|Slower initial page loads	            |Faster initial page loads      |
+|-----------------------------------------------------------------------|
+|Bigger JavaScript bundle needs to be   |Less JavaScript needs to be    |
+|downloaded before app starts running	| downloaded and executed       |
+|-----------------------------------------------------------------------|
+|Data is fetched after components mount	|Data is fetched before HTML is | 
+|                                       |rendered                       |
+|-----------------------------------------------------------------------|
+|Highly interactive:                    |Less interactive:              |
+|All the code and content has already   |Pages might be downloaded on   |
+|been loaded (except data)	            |demand and require full page   |
+|                                       |reloads                        |
+|-----------------------------------------------------------------------|
+|SEO can be problematic                 |SEO-Friendly:                  |
+|                                       |Content is easier for search   |
+|                                       |engines to index               |
+|-----------------------------------------------------------------------|
+
+
