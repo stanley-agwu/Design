@@ -449,3 +449,201 @@ Enable via:
 ES Modules are the standardized JavaScript module system that uses `import` and `export` to structure code into reusable, maintainable, and statically analyzable modules.
 
 
+### 4. Scope
+
+#### What is Scope in JavaScript?
+
+**Scope** defines **where variables are accessible** in your code.
+
+In simple terms:
+Scope determines the visibility and lifetime of variables.
+
+JavaScript has **lexical scope**, meaning scope is determined by where code is written, not where it is executed.
+
+#### Types of Scopes
+
+##### Global Scope
+Variables declared outside any function or block.
+
+```js
+const appName = "MyApp";
+
+function printApp() {
+  console.log(appName);
+}
+
+printApp(); // "MyApp"
+```
+
+- Accessible everywhere
+- Can cause global name space pollution
+
+##### Function Scope
+Variables declared inside a function are accessible only within that function.
+
+```js
+function greet() {
+  const message = "Hello";
+  console.log(message);
+}
+
+greet(); // Hello
+console.log(message); // ReferenceError
+```
+
+`message` exists only inside `greet`.
+
+##### Block Scope (let / const)
+Introduced in ES6.
+Variables declared with `let` or `const` inside `{}` are block-scoped.
+
+```js
+if (true) {
+  let count = 10;
+  const name = "Grant";
+}
+
+console.log(count); // ReferenceError
+```
+
+NOTE: `var` does NOT respect block scope:
+
+```js
+if (true) {
+  var x = 5;
+}
+
+console.log(x); // 5 (leaks out)
+```
+
+#### Lexical Scope (Important Concept)
+Scope is determined by **where a function is defined**, not where it is called.
+
+```js
+function outer() {
+  const a = 10;
+
+  function inner() {
+    console.log(a);
+  }
+
+  return inner;
+}
+
+const fn = outer();
+fn(); // 10
+```
+
+`inner` remembers the scope it was created in → this is also a **closure**.
+
+#### Scope Chain
+When accessing a variable, JS looks:
+
+1. Inside current scope
+2. Then outer scope
+3. Then outer of outer
+4. Until global scope
+
+```js
+const a = 1;
+
+function first() {
+  const b = 2;
+
+  function second() {
+    const c = 3;
+    console.log(a, b, c);
+  }
+
+  second();
+}
+
+first(); // 1 2 3
+```
+
+This lookup process is called the **scope chain**.
+
+#### Shadowing
+A variable in inner scope can override outer scope variable.
+
+```js
+const value = 100;
+
+function test() {
+  const value = 50;
+  console.log(value);
+}
+
+test(); // 50
+```
+
+Inner `value` shadows outer one.
+
+#### Temporal Dead Zone (TDZ)
+Applies to `let` and `const`.
+
+```js
+console.log(a); // ReferenceError
+let a = 10;
+```
+
+Between the start of scope and variable declaration → TDZ.
+
+#### Common Pitfall (Closures + Loops)
+
+```js
+for (var i = 0; i < 3; i++) {
+  setTimeout(() => console.log(i), 100);
+}
+```
+
+Output:
+
+```
+3
+3
+3
+```
+
+Because `var` is function-scoped.
+
+Fix:
+
+```js
+for (let i = 0; i < 3; i++) {
+  setTimeout(() => console.log(i), 100);
+}
+```
+
+Output:
+
+```
+0
+1
+2
+```
+
+#### Scope vs Context (Important Difference)
+Scope → Where variables are accessible
+Context (`this`) → How a function is invoked
+
+They are different concepts.
+
+#### Best Practices
+1. Prefer `const` by default
+2. Use `let` only when reassignment is needed
+3. Avoid `var`
+3. Avoid global variables
+4. Keep scope small
+
+#### Summary
+Scope in JavaScript defines where variables are accessible. JavaScript uses lexical scoping, meaning a function’s scope is determined by where it is defined, forming a scope chain that resolves variables from inner to outer environments.
+
+#### Side effects improper scope usage
+
+1. **Global namespace pollution** → Variables accidentally accessible everywhere, causing conflicts.
+2. **Variable shadowing bugs** → Inner variables override outer ones unexpectedly.
+3. **Memory leaks via closures** → Variables kept alive longer than intended.
+4. **Unexpected mutation** → Shared scoped variables modified from multiple     places.
+
+
