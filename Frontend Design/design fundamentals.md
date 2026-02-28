@@ -647,3 +647,175 @@ Scope in JavaScript defines where variables are accessible. JavaScript uses lexi
 4. **Unexpected mutation** → Shared scoped variables modified from multiple     places.
 
 
+### 5. Closure
+
+#### What is a Closure in JavaScript?
+A **closure** is created when a function **remembers variables from its lexical scope**, even after the outer function has finished executing.
+
+In simple terms:
+A closure allows a function to access variables from its outer scope even after that outer function has returned.
+
+JavaScript has **lexical scoping**, so closures are a natural result of how scope works.
+
+#### Basic Example
+
+```js
+function outer() {
+  let count = 0;
+
+  function inner() {
+    count++;
+    console.log(count);
+  }
+
+  return inner;
+}
+
+const counter = outer();
+
+counter(); // 1
+counter(); // 2
+counter(); // 3
+```
+
+#### What happened?
+1. `outer()` runs
+2. Normally `count` should disappear after `outer` finishes
+3. But `inner` still references `count`
+4. JavaScript keeps `count` alive in memory
+
+That preserved environment is the **closure**.
+
+#### How It Works Internally
+When `outer()` executes:
+1. A new execution context is created
+2. `count` is stored in its lexical environment
+3. `inner` keeps a reference to that environment
+4. Even after `outer()` finishes, the environment remains alive
+
+This is why closures can preserve state.
+
+#### Practical Use Case — Private Variables
+Closures enable data encapsulation:
+
+```js
+function createBankAccount(initialBalance) {
+  let balance = initialBalance;
+
+  return {
+    deposit(amount) {
+      balance += amount;
+    },
+    getBalance() {
+      return balance;
+    }
+  };
+}
+
+const account = createBankAccount(100);
+
+account.deposit(50);
+console.log(account.getBalance()); // 150
+```
+
+`balance` is private — it cannot be accessed directly.
+
+This is the foundation of the **Module Pattern**.
+
+#### Closure in Loops
+Problem:
+
+```js
+for (var i = 0; i < 3; i++) {
+  setTimeout(() => console.log(i), 100);
+}
+```
+
+Output:
+
+```
+3
+3
+3
+```
+
+Why?
+
+- `var` is function-scoped
+- All callbacks close over the same `i`
+
+Fix using `let` (block scope):
+
+```js
+for (let i = 0; i < 3; i++) {
+  setTimeout(() => console.log(i), 100);
+}
+```
+
+Output:
+
+```
+0
+1
+2
+```
+
+Or fix using closure manually:
+
+```js
+for (var i = 0; i < 3; i++) {
+  (function(index) {
+    setTimeout(() => console.log(index), 100);
+  })(i);
+}
+```
+
+#### Real-World Example
+Closures are heavily used in:
+
+1. React hooks
+2. Event handlers
+3. Memoization
+4. Debounce/throttle
+5. Factory functions
+
+Example (Debounce):
+
+```js
+function debounce(fn, delay) {
+  let timer;
+
+  return function (...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      fn(...args);
+    }, delay);
+  };
+}
+```
+
+`timer` persists between function calls because of closure.
+
+#### Memory Implications
+Closures can cause **memory leaks** if:
+
+1. They reference large objects
+2. They persist longer than needed
+3. They are attached to long-lived listeners
+
+Because the outer variables remain in memory as long as the inner function exists.
+
+#### Summary
+A closure is a function that retains access to variables from its lexical scope even after the outer function has finished execution. It allows state preservation and data encapsulation in JavaScript.
+
+#### Important Clarification
+Closure is NOT:
+
+1. A special syntax
+2. A feature you “enable”
+3. Something separate from scope
+
+It is simply:
+A function + its preserved lexical environment.
+
+
