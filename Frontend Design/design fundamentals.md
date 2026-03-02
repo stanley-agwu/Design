@@ -995,3 +995,63 @@ Avoid ISR if:
 
 #### Summary
 Incremental Static Regeneration (ISR) is a Next.js feature that allows static pages to be regenerated in the background after deployment, based on a revalidation interval or on-demand triggers, combining static performance with dynamic freshness.
+
+
+### 8. Preflight
+A **preflight request** is an automatic, browser‑initiated **CORS safety check** that happens *before* your actual `fetch()` call is sent. It’s not specific to React, or anyother Javascript Framework/Library — React just runs in the browser, and the browser enforces CORS.
+
+#### What “preflight” means
+When your JavaScript code makes a **cross‑origin** request (e.g., from `http://localhost:3000` to `https://api.example.com`), the browser may first send an **HTTP OPTIONS** request to the server. This OPTIONS request is called a **preflight request**.
+
+Its purpose is to ask the server:
+
+- “Do you allow requests from my origin?”
+- “Do you allow the HTTP method I want to use (e.g., POST, PUT, DELETE)?”
+- “Do you allow the custom headers I want to send (e.g., Authorization, Content-Type)?”
+
+Only if the server responds with the correct CORS headers will the browser send your real request.
+
+#### When is a preflight is triggered?
+A preflight happens when your request is considered **non‑simple**. Examples:
+
+- Using methods other than GET, POST
+- Sending custom headers (e.g., `Authorization`, `X-Custom-Header`)
+- Using `Content-Type` other than:
+  - `application/x-www-form-urlencoded`
+  - `multipart/form-data`
+  - `text/plain`
+- Using `credentials: 'include'` with cross‑origin requests
+
+Adding headers like `Authorization` or `Content-Type: application/x-www-form-urlencoded` can trigger preflight.
+
+#### Why preflight exists
+CORS is a browser security mechanism. It prevents malicious sites from silently sending dangerous requests to other servers on behalf of a user. Preflight ensures the server explicitly allows the request before the browser proceeds.
+
+#### Can a user activate Preflight?
+Users **don’t** handle the preflight themselves. The browser does it automatically.
+
+Your job is to ensure the **server** responds correctly:
+
+The server must return headers like:
+
+```
+Access-Control-Allow-Origin: https://my-website.com
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type
+```
+
+If the server responds properly, the browser will then send the real request.
+
+If not, the user see CORS errors.
+
+---
+
+#### How to avoid unnecessary preflights
+Sometimes user can avoid preflight by:
+
+- Using only simple headers
+- Using simple content types
+- Avoiding custom headers unless needed
+- Proxying API requests through dev server (e.g., React’s `proxy` setting)
+
+But often, preflight is normal and expected.
