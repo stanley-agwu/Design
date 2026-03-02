@@ -845,3 +845,153 @@ A function + its preserved lexical environment.
 |-----------------------------------------------------------------------|
 
 
+### 7. Incremental Static Regeneration (ISR)
+
+**Incremental Static Regeneration (ISR)** is a feature in **Next.js** that allows you to update **static pages after they’ve been deployed**, without rebuilding the entire application.
+
+It combines the performance of **Static Site Generation (SSG)** with the flexibility of **Server-Side Rendering (SSR)**.
+
+#### Why ISR Exists
+Traditionally:
+
+1. **SSG** → Page is built at build time → super fast → but stale until next full rebuild.
+2. **SSR** → Page is rendered on every request → always fresh → but slower.
+
+**ISR** gives you:
+
+1. Static speed
+2. Automatic background updates
+3. No full rebuild required
+
+#### How ISR Works (Conceptually)
+
+1. Page is statically generated at build time.
+2. You define a **revalidation time**.
+3. After that time:
+  - The first request still serves the old page.
+  - In the background, Next.js regenerates a new version.
+4. Once generated → future users get the updated page.
+
+So users never wait.
+
+#### ISR in the Pages Router (Classic)
+
+```js
+export async function getStaticProps() {
+  const response = await fetch('https://api.example.com/products');
+  const data = await response.json();
+
+  return {
+    props: { data },
+    revalidate: 60, // Re-generate page every 60 seconds
+  };
+}
+```
+
+##### What `revalidate: 60` means:
+
+1. Page is static.
+2. After 60 seconds, Next.js regenerates it on the next request.
+
+#### ISR in the App Router (Modern Next.js 13+)
+In the App Router, ISR is built into `fetch`:
+
+```js
+const data = await fetch('https://api.example.com/products', {
+  next: { revalidate: 60 }
+});
+```
+
+Or at route level:
+
+```js
+export const revalidate = 60;
+```
+
+Much cleaner.
+
+#### Real-World Example
+
+Imagine you’re building:
+
+1. E-commerce product pages
+2. A Blog
+3. Analytics dashboard
+4. Crypto prices dashboard
+
+You don’t want:
+
+1. Full rebuild every time a product changes
+2. SSR on every request
+
+ISR solves it perfectly.
+
+
+#### Comparison
+|-------------------------------------------------------------|
+| Feature        | SSG          | SSR       | ISR             |
+| -------------- | -----------  | --------- |-----------------|
+| Speed          | Very Fast    | Slower    | Very Fast       |
+| Fresh Data     | No           | Yes       | Eventually      |
+| Build Required | Yes          | No        | No full rebuild |
+| Server Load    | Low          | High      | Low             |
+|-------------------------------------------------------------|
+
+
+#### On-Demand Revalidation
+Instead of waiting 60 seconds, you can trigger updates manually:
+
+```js
+await response.revalidate('/products/1');
+```
+
+Used when:
+
+1. Admin updates content
+2. CMS webhook fires
+3. Payment confirmation changes page
+
+#### What Happens Internally
+Next.js stores static pages in a cache:
+
+```
+User Request
+     ↓
+Cached Static Page
+     ↓ (if expired)
+Background Regeneration
+     ↓
+Cache Updated
+```
+
+It’s sometimes called **"stale-while-revalidate"** behavior.
+
+#### Important Considerations
+
+- Only works when deployed on platforms supporting ISR (like **Vercel**).
+
+- Not suitable for:
+  1. Real-time dashboards
+  2. Highly dynamic user-specific content
+
+- Great for:
+  - Marketing pages
+  - Blogs
+  - Product catalogs
+
+#### When to Use ISR (Decision Guide)
+
+Use ISR if:
+
+1. Data updates occasionally
+2. You need SEO
+3. You want static performance
+4. Full rebuilds are expensive
+
+Avoid ISR if:
+
+1. Data must be real-time
+2. Content is per-user (personalized)
+
+#### Summary
+Incremental Static Regeneration (ISR) is a Next.js feature that allows static pages to be regenerated in the background after deployment, based on a revalidation interval or on-demand triggers, combining static performance with dynamic freshness.
