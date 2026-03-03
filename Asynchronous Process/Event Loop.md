@@ -15,7 +15,7 @@ JS executes one function at a time
 Functions are pushed onto the stack and popped when done
 If the stack is busy → nothing else runs
 
-"""
+```js
 function a() {
   b();
 }
@@ -23,10 +23,13 @@ function b() {
   console.log("Hello");
 }
 a();
-"""
+```
 
 Execution order:
-a → b → console.log → pop → pop
+
+```js
+push(a) → push(b) → console.log → pop(b) → pop(a)
+```
 
 -> Blocking: long-running code freezes everything.
 
@@ -38,7 +41,9 @@ When JS encounters async operations, they are delegated to the environment:
 4. DOM events
 5. Promises (resolution handled specially)
 
+```js
 setTimeout(() => console.log("Done"), 1000);
+```
 
 What happens:
 Timer is handled outside the Call Stack
@@ -54,7 +59,10 @@ It Contains callbacks from:
 4. setImmediate (Node)
 
 Example:
+
+```js
 setTimeout(() => console.log("Macrotask"), 0);
+```
 
 -> Executed after Call Stack is empty.
 
@@ -66,7 +74,9 @@ Sources:
 2. queueMicrotask
 3. MutationObserver
 
+```js
 Promise.resolve().then(() => console.log("Microtask"));
+```
 
 ##### 5. The Event Loop (The Orchestrator)
 The Event Loop constantly checks:
@@ -87,10 +97,13 @@ Render (browser)
 Repeat
 
 ##### Classic Example:
+
+```js
 console.log("Start");
 setTimeout(() => console.log("Timeout"), 0);
 Promise.resolve().then(() => console.log("Promise"));
 console.log("End");
+```
 
 ##### Execution Order
 Start
@@ -108,11 +121,13 @@ Microtasks	                Promise executes
 Macrotasks	                Timeout executes
 
 ##### Infinite Microtask Starvation (Important!)
+
+```js
 function loop() {
   Promise.resolve().then(loop);
 }
 loop();
-
+```
 
 - Macrotasks never run
 - Browser UI freezes
@@ -123,9 +138,11 @@ In browsers:
 - Rendering happens between macrotasks
 - Microtasks block rendering
 
+```js
 Promise.resolve().then(() => {
   while (true) {} // freezes UI
 });
+```
 
 #### Node.js Event Loop
 Node.js has phases:
