@@ -42,3 +42,43 @@ const wait = (ms) => new Promise((resolve) => {
 ##### Output
 // 0, 1, 2, 3, 4
 ----------------------------------------------------------------------------
+#### Example 3 -> Task queues vs. microtasks
+Promise callbacks are handled as a microtask whereas setTimeout() callbacks are handled as macrotasks in the Task queue.
+
+```js
+const promise = new Promise((resolve, reject) => {
+  console.log("Promise callback");
+  resolve();
+}).then(() => {
+  console.log("Promise callback (.then)");
+});
+
+setTimeout(() => {
+  console.log("event-loop cycle: Promise (fulfilled)", promise);
+}, 0);
+
+console.log("Promise (pending)", promise);
+```
+
+##### Output
+Promise callback
+Promise (pending) Promise {<pending>}
+Promise callback (.then)
+event-loop cycle: Promise (fulfilled) Promise {<fulfilled>}
+----------------------------------------------------------------------------
+#### Example 4
+
+```js
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+wait(0).then(() => console.log(4));
+Promise.resolve()
+  .then(() => console.log(2))
+  .then(() => console.log(3));
+
+console.log(1);
+```
+
+##### Output
+1, 2, 3, 4
+-----------------------------------------------------------------------------
