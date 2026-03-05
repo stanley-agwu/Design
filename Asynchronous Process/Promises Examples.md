@@ -200,3 +200,80 @@ It:
 2. Schedules continuation as a microtask
 3. Lets other code run
 --------------------------------------------------------------------------
+### Example 7 -> What will the following code output
+
+```js
+function delay(ms) {
+  return new Promise(resolve =>
+    setTimeout(() => {
+      console.log("3rd");
+      resolve();
+    }, ms)
+  );
+}
+
+async function run() {
+  console.log("2nd");
+  await delay(1000);
+  console.log("4th");
+}
+
+(async () => {
+  console.log("1st");
+  await run();
+  console.log("5th");
+})();
+```
+
+#### Output
+1st
+2nd
+(After ~1 second)
+3rd
+4th
+5th
+------------------------------------------------------------------------
+### Example 8 -> What will the following code output
+
+```js
+const result = new Promise((resolve, reject) => {
+    setTimeout(() => {
+        console.log('Done! Resolved!');
+        resolve("Done!");
+        console.log('After 200 ms');
+    }, 200);
+})
+
+result.then(() => console.log('call back!'));
+```
+
+#### Output
+Done! Resolved!
+(resolves promise -> Done!)
+After 200 ms
+call back!
+------------------------------------------------------------------------
+### Example 9 -> What will the following code output
+
+```js
+const result = new Promise((resolve, reject) => {
+    setTimeout(() => {
+        console.log('Done! Resolved!');
+        resolve("Response!");
+        console.log('After 200 ms');
+    }, 200);
+})
+
+result.then((res) => console.log(res));
+
+console.log('Final!');
+```
+
+#### Output
+Final!
+(After ~200ms)
+Done! Resolved!
+After 200 ms
+Response!
+----------------------------------------------------------------------
+
