@@ -15,3 +15,11 @@
 
 4A. In JavaScript, null represents an intentional absence of value, whereas undefined means a variable has been declared but not assigned a value. For example, let x; console.log(x); outputs undefined, while let y = null; console.log(y); outputs null. This distinction helps in debugging and handling edge cases effectively.
 
+5. How do you handle version control in a collaborative environment?
+
+5A. I use Git for version control and GitHub for collaboration, ensuring organized workflows. For example, I create feature branches for specific tasks and use pull requests for code reviews. This approach maintains code integrity and simplifies tracking changes in web development projects.
+
+6. What is the DOM, and how do you manipulate it?
+
+6A. The DOM (Document Object Model) represents an HTML document as a tree structure, allowing JavaScript to access and manipulate elements dynamically. For instance, using document.getElementById('button') and addEventListener, I can create interactive web pages by responding to user actions.
+
