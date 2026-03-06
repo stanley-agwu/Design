@@ -23,3 +23,15 @@
 
 6A. The DOM (Document Object Model) represents an HTML document as a tree structure, allowing JavaScript to access and manipulate elements dynamically. For instance, using document.getElementById('button') and addEventListener, I can create interactive web pages by responding to user actions.
 
+7. Explain the difference between responsive design and adaptive design.
+
+7A. Responsive design uses fluid grids and media queries to adjust layouts across devices, while adaptive design relies on predefined layouts for specific screen sizes. Responsive design ensures scalability, making it more suitable for modern web browsers and user expectations.
+
+8. What are callbacks, and how do they work in JavaScript?
+
+8A. A callback is a function passed as an argument to another function, executed after the parent function completes. For example, in setTimeout(() => console.log('Hello'), 1000), the callback runs after 1 second. These functions are essential for handling asynchronous tasks like API requests in web applications.
+
+9. Describe your experience with React and its core concepts.
+
+9A. I have extensive experience using React for building user interfaces. Core concepts like components, state, and props allow for modular and reusable code. For example, I developed a dynamic dashboard using React and ReactJS libraries, improving user interactivity and maintainability.
+
