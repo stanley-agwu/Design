@@ -97,3 +97,22 @@ class Twitter:
 
     def unfollow(self, follower_id: int, followee_id: int) -> None:
         self.follow_map[follower_id].discard(followee_id)
+
+
+# Let f be the number of followed users plus the user themself.
+# pushing initial latest tweets: O(f log f)
+# extracting at most 10 tweets: O(10 log f)
+
+# So overall:
+
+# Time: O(f log f)
+# Space: O(f)
+
+twitter = Twitter()
+twitter.post_tweet(1, 5)
+print(twitter.get_news_feed(1))
+twitter.follow(1, 2)
+twitter.post_tweet(2, 6)
+print(twitter.get_news_feed(1))
+twitter.unfollow(1, 2)
+print(twitter.get_news_feed(1))
