@@ -35,3 +35,15 @@
 
 9A. I have extensive experience using React for building user interfaces. Core concepts like components, state, and props allow for modular and reusable code. For example, I developed a dynamic dashboard using React and ReactJS libraries, improving user interactivity and maintainability.
 
+10. How do you ensure cross-browser compatibility in web development?
+
+10A. I ensure cross-browser compatibility by using CSS resets, testing across major browsers, and leveraging tools like BrowserStack. Additionally, I avoid browser-specific features and rely on web standards to ensure consistent functionality for all users."
+
+11. Explain the importance of semantic HTML.
+
+11A. Semantic HTML uses meaningful tags like <article>, <section>, and <nav> to describe content structure. This strategy improves accessibility for screen readers and enhances SEO by providing clear context for search engines, making web pages more discoverable and user-friendly.
+
+12. How do you use APIs in front-end development?
+
+12A. I use APIs to fetch and display data dynamically on web pages. For example, using fetch() or Axios, I integrated a weather API into a web application, providing real-time updates to users. Understanding JSON and async/await syntax is crucial for these tasks.
+
