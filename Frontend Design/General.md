@@ -47,3 +47,11 @@
 
 12A. I use APIs to fetch and display data dynamically on web pages. For example, using fetch() or Axios, I integrated a weather API into a web application, providing real-time updates to users. Understanding JSON and async/await syntax is crucial for these tasks.
 
+13. What is Flexbox, and how is it used in CSS?
+
+13A. Flexbox is a CSS layout module that arranges items within a container efficiently, even with dynamic or unknown sizes. For instance, using display: flex and properties like justify-content, I created responsive navigation bars, improving user interface design.
+
+14. How do you debug JavaScript code?
+
+14A. I use browser developer tools and console.log statements to identify issues in JavaScript code. Additionally, setting breakpoints in the browser console helps analyze runtime behavior, ensuring efficient debugging and smoother functionality in interactive web applications.
+
