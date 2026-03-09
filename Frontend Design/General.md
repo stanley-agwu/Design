@@ -67,3 +67,14 @@
 
 17A. In Angular, I manage state using services and RxJS for reactive programming. For example, services act as a centralized store for shared data, while RxJS observables handle asynchronous streams, ensuring consistent state across components.
 
+18. What is the role of JSON in front-end development?
+
+18A. JSON (JavaScript Object Notation) is a lightweight data format for transmitting data between a server and a client. For example, I used JSON to fetch user information via an API and render it dynamically on a React-based web page, ensuring efficient and scalable data handling.
+
+19. Explain the importance of responsive typography in web design.
+
+19A. Responsive typography ensures text scales appropriately across devices using relative units like em or rem. For example, I implemented responsive headings in a web application to enhance readability on both mobile and desktop browsers.
+
+20. What tools do you use for CSS preprocessing, and why?
+
+20A. I use preprocessors like Sass and Less to simplify CSS management by introducing variables, nesting, and mixins. For example, using Sass variables, I created a theme system for a web application, enabling consistent styles and efficient maintenance.
