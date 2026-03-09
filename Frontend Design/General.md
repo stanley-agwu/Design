@@ -55,3 +55,15 @@
 
 14A. I use browser developer tools and console.log statements to identify issues in JavaScript code. Additionally, setting breakpoints in the browser console helps analyze runtime behavior, ensuring efficient debugging and smoother functionality in interactive web applications.
 
+15. Describe the difference between synchronous and asynchronous programming.
+
+15A. Synchronous programming executes tasks sequentially, blocking further execution until the current task is completed. Asynchronous programming, like async/await in JavaScript, allows tasks to run concurrently, improving performance in scenarios like API calls or data fetching in web apps.
+
+16. What is lazy loading, and how does it improve performance?
+
+16A. Lazy loading defers the loading of non-critical resources until needed. For example, images below the fold are loaded only when scrolled into view, reducing initial load time and enhancing performance in web applications.
+
+17. How do you manage state in an Angular application?
+
+17A. In Angular, I manage state using services and RxJS for reactive programming. For example, services act as a centralized store for shared data, while RxJS observables handle asynchronous streams, ensuring consistent state across components.
+
