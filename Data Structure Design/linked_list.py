@@ -46,6 +46,31 @@ myLinkedList.deleteAtIndex(1);    // now the linked list is 1->3
 myLinkedList.get(1);              // return 3
 """
 
+# Idea
+"""
+A clean way to implement this is with a doubly linked list + sentinel 
+head and tail nodes.
+
+We maintain:
+1. head sentinel
+2. tail sentinel
+3. size
+
+The actual values live between head and tail.
+So an empty list looks like:
+head <-> tail
+
+If the list has values 1, 2, 3, it looks like:
+head <-> 1 <-> 2 <-> 3 <-> tail
+
+Key optimization:
+To locate a node at index:
+    if index < size // 2, traverse from the front
+    otherwise, traverse from the back
+
+This makes lookup faster on average.
+"""
+
 class Node:
     def __init__(self, val=0):
         self.val = val
@@ -86,10 +111,10 @@ class MyLinkedList:
         return self._get_node(index).val
 
     def add_at_head(self, val: int) -> None:
-        self.addAtIndex(0, val)
+        self.add_at_index(0, val)
 
     def add_at_tail(self, val: int) -> None:
-        self.addAtIndex(self.size, val)
+        self.add_at_index(self.size, val)
 
     def add_at_index(self, index: int, val: int) -> None:
         if index < 0:
@@ -99,17 +124,17 @@ class MyLinkedList:
 
         # Find node that will be AFTER the new node
         if index == self.size:
-            succ = self.tail
-            pred = self.tail.prev
+            curr_node = self.tail
+            prev_node = self.tail.prev
         else:
-            succ = self._get_node(index)
-            pred = succ.prev
+            curr_node = self._get_node(index)
+            prev_node = curr_node.prev
 
         new_node = Node(val)
-        new_node.prev = pred
-        new_node.next = succ
-        pred.next = new_node
-        succ.prev = new_node
+        new_node.prev = prev_node
+        new_node.next = curr_node
+        prev_node.next = new_node
+        curr_node.prev = new_node
 
         self.size += 1
 
@@ -118,10 +143,24 @@ class MyLinkedList:
             return
 
         node = self._get_node(index)
-        pred = node.prev
-        succ = node.next
+        prev_node = node.prev
+        next_node = node.next
 
-        pred.next = succ
-        succ.prev = pred
+        prev_node.next = next_node
+        next_node.prev = prev_node
 
         self.size -= 1
+
+
+# Time complexity
+"""
+Let n = size of linked list.
+
+get(index) → O(min(index, n - index))
+addAtHead(val) → O(1)
+addAtTail(val) → O(1)
+addAtIndex(index, val) → O(min(index, n - index))
+deleteAtIndex(index) → O(min(index, n - index))
+"""
+
+# O(n) - Space complexity
