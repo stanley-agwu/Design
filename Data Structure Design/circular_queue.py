@@ -57,45 +57,45 @@ At most 3000 calls will be made to enQueue, deQueue, Front, Rear, isEmpty, and i
 class MyCircularQueue:
 
     def __init__(self, k: int):
-        self.q = [0] * k
-        self.cap = k
+        self.queue = [0] * k
+        self.capacity = k
         self.head = 0
         self.size = 0
 
     def en_queue(self, value: int) -> bool:
-        if self.isFull():
+        if self.is_full():
             return False
 
-        rear = (self.head + self.size) % self.cap
-        self.q[rear] = value
+        rear = (self.head + self.size) % self.capacity
+        self.queue[rear] = value
         self.size += 1
         return True
 
     def de_queue(self) -> bool:
-        if self.isEmpty():
+        if self.is_empty():
             return False
 
-        self.head = (self.head + 1) % self.cap
+        self.head = (self.head + 1) % self.capacity
         self.size -= 1
         return True
 
     def front(self) -> int:
         if self.isEmpty():
             return -1
-        return self.q[self.head]
+        return self.queue[self.head]
 
     def rear(self) -> int:
-        if self.isEmpty():
+        if self.is_empty():
             return -1
 
-        rear = (self.head + self.size - 1) % self.cap
-        return self.q[rear]
+        rear = (self.head + self.size - 1) % self.capacity
+        return self.queue[rear]
 
     def is_empty(self) -> bool:
         return self.size == 0
 
     def is_full(self) -> bool:
-        return self.size == self.cap
+        return self.size == self.capacity
     
 
 # Time complexity
