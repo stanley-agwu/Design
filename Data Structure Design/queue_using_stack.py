@@ -87,3 +87,14 @@ class MyQueue:
     
 # push O(n), pop O(1), peek O(1), empty O(1) - Time complexity
 # O(n) - Space complexity
+
+queue = MyQueue()
+queue.push(2)
+queue.push(3)
+queue.push(5)
+print(queue.in_stack, queue.out_stack)
+print(queue.pop())
+# print(queue)
+# queue.push(4)
+# queue.pop()
+# print(queue)
