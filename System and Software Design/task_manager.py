@@ -65,6 +65,49 @@ At most 2 * 105 calls will be made in total to add, edit, rmv, and execTop metho
 The input is generated such that taskId will be valid.
 """
 
+# Idea
+"""
+Use a max-heap + hash map with lazy deletion.
+
+That gives:
+    add → O(log n)
+    edit → O(log n)
+    rmv → O(1)
+    execTop → amortized O(log n)
+
+Idea
+
+We need to always execute:
+1. the highest priority
+2. if tied, the highest taskId
+
+But tasks can also be edited and removed.
+A plain heap alone is not enough, because:
+-> edit(taskId, newPriority) changes an existing task already inside the heap
+-> rmv(taskId) removes an arbitrary task, which heaps do not support efficiently
+
+So we use:
+-> a hash map taskInfo[taskId] = {userId, priority}
+-> a max-heap storing entries (priority, taskId, userId)
+
+# Lazy deletion
+When a task is edited:
+-> update taskInfo[taskId]
+-> push the new version into the heap
+
+When a task is removed:
+-> erase it from taskInfo
+
+When taking the top from the heap:
+-> keep popping while the heap entry is stale
+
+an entry is stale if:
+-> its taskId no longer exists in taskInfo, or
+-> its priority/userId no longer matches the current task info
+
+This avoids expensive heap deletions.
+"""
+# Use Priority Queue with Lazy deletion
 import heapq
 
 
@@ -106,3 +149,53 @@ class TaskManager:
             return user_id
 
         return -1
+    
+# Time complexity
+# add: O(log n)
+# edit: O(log n)
+# rmv: O(1)
+# execTop: amortized O(log n)
+
+# O(n) - Space complexity
+
+
+# Use SortedContainers' SortedList
+from sortedcontainers import SortedList
+
+class TaskManager2:
+    def __init__(self, tasks: list[list[int]]):
+        self.task_info = {}   # taskId -> (userId, priority)
+        self.sorted_list = SortedList() # sorted list of (priority, taskId, userId)
+
+        for user_id, task_id, priority in tasks:
+            self.task_info[task_id] = (user_id, priority)
+            self.sorted_list.add((priority, task_id, user_id))
+
+    def add(self, user_id: int, task_id: int, priority: int) -> None:
+        self.task_info[task_id] = (user_id, priority)
+        self.sorted_list.add((priority, task_id, user_id))
+
+    def edit(self, task_id: int, new_priority: int) -> None:
+        user_id, old_priority = self.task_info[task_id]
+        self.task_info[task_id] = (user_id, new_priority)
+        self.sorted_list.discard((old_priority, task_id, user_id))
+        self.sorted_list.add((new_priority, task_id, user_id))
+
+    def rmv(self, task_id: int) -> None:
+        priority, user_id = self.task_info[task_id]
+        del self.task_info[task_id]
+        self.sorted_list.discard(priority, task_id, user_id)
+
+    def exec_top(self) -> int:
+        if not self.sorted_list:
+            return -1
+        _, _, user_id = self.sorted_list.pop()
+        return user_id
+    
+# Time complexity
+# add: O(n)
+# edit: O(n)
+# rmv: O(n)
+# execTop: O(n)
+
+# O(n) - Space complexity
