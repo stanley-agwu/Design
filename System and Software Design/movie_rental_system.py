@@ -1,4 +1,6 @@
-# Movie Rental Sysytem
+# Movie Rental System
+
+# Tag -> Hard
 
 """
 You have a movie renting company consisting of n shops. You want to 
@@ -79,5 +81,62 @@ Each shop carries at most one copy of a movie moviei.
 At most 105 calls in total will be made to search, rent, drop and report.
 """
 
+from collections import defaultdict
+from sortedcontainers import SortedList
 
 
+class MovieRentingSystem:
+    def __init__(self, n: int, entries: list[list[int]]):
+        # (shop, movie) -> price
+        self.price = {}
+
+        # movie -> SortedList of (price, shop) for unrented copies
+        self.available = defaultdict(SortedList)
+
+        # SortedList of (price, shop, movie) for rented copies
+        self.rented = SortedList()
+
+        for shop, movie, p in entries:
+            self.price[(shop, movie)] = p
+            self.available[movie].add((p, shop))
+
+    def search(self, movie: int) -> list[int]:
+        res = []
+        avail = self.available[movie]
+        for i in range(min(5, len(avail))):
+            res.append(avail[i][1])   # shop
+        return res
+
+    def rent(self, shop: int, movie: int) -> None:
+        p = self.price[(shop, movie)]
+        self.available[movie].remove((p, shop))
+        self.rented.add((p, shop, movie))
+
+    def drop(self, shop: int, movie: int) -> None:
+        p = self.price[(shop, movie)]
+        self.rented.remove((p, shop, movie))
+        self.available[movie].add((p, shop))
+
+    def report(self) -> list[list[int]]:
+        res = []
+        for i in range(min(5, len(self.rented))):
+            _, shop, movie = self.rented[i]
+            res.append([shop, movie])
+        return res
+
+# Complexity Analysis
+"""
+Let E = len(entries).
+
+Initialization
+Each insertion into a sorted set is O(log E)
+Total: O(E log E)
+
+Per operation ->
+search(movie): O(5) to read first 5 items, effectively O(1)
+rent(shop, movie): O(log E)
+drop(shop, movie): O(log E)
+report(): O(5), effectively O(1)
+
+O(E) - Space complexity
+"""
