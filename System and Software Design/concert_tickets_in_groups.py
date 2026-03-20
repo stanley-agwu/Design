@@ -1,5 +1,7 @@
 # Booking Concert Tickets in Groups
 
+# Tag -> Hard
+
 """
 A concert hall has n rows numbered from 0 to n - 1, each with m seats, 
 numbered from 0 to m - 1. You need to design a ticketing system that can 

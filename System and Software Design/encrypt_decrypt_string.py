@@ -1,5 +1,7 @@
 # Encrypt and Decrypt Strings
 
+# Tag -> Hard
+
 """
 You are given a character array keys containing unique characters and a 
 string array values containing strings of length 2. You are also given 
