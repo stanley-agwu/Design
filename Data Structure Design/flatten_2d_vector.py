@@ -37,8 +37,22 @@ Constraints:
 At most 105 calls will be made to next and hasNext.
 """
 
-from typing import List
+# Idea
+"""
+Use two pointers to track the current position in the 2D vector:
+1. row pointer to track the current row.
+2. column pointer to track the current column within the row.
 
+When next() is called, return the current element and move the column pointer 
+forward.
+
+If the column pointer exceeds the current row's length, move the row pointer to 
+the next row and reset the column pointer to 0.
+
+The hasNext() method checks if there are more elements to iterate over by 
+ensuring the row pointer is within bounds and the column pointer is valid for 
+the current row.
+"""
 
 class Vector2D:
 
