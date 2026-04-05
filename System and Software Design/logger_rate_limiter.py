@@ -62,14 +62,10 @@ class Logger:
         self.last_print = {}
 
     def should_print_message(self, timestamp: int, message: str) -> bool:
-        if message not in self.last_print:
-            self.last_print[message] = timestamp
+        if message not in self.last_print \
+            or timestamp >= self.last_print[message]:
+            self.last_print[message] = timestamp + 10
             return True
-
-        if timestamp >= self.last_print[message] + 10:
-            self.last_print[message] = timestamp
-            return True
-
         return False
     
 # Time complexity: O(1) for each call to should_print_message
