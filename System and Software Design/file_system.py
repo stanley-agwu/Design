@@ -67,9 +67,9 @@ The only tricky part is createPath:
 class FileSystem:
 
     def __init__(self):
-        self.paths = {"": -1}   # virtual root
+        self.paths = {"": -1}  # virtual root
 
-    def createPath(self, path: str, value: int) -> bool:
+    def create_path(self, path: str, value: int) -> bool:
         if path in self.paths:
             return False
 
