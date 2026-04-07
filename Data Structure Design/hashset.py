@@ -37,6 +37,26 @@ Constraints:
 At most 104 calls will be made to add, remove, and contains.
 """
 
+# Idea
+"""
+A clean way to design this is with separate chaining:
+1. Use an array of buckets
+2. Each bucket stores keys that hash to that index
+
+For each operation:
+1. compute bucket index with key % size
+2. scan that bucket
+
+Because keys are up to 10^6 and there are only 10^4 operations, this works very well.
+
+A HashSet only needs to support:
+1. add(key)
+2. remove(key)
+3. contains(key)
+
+We can choose a fixed number of buckets, say a prime like 1009, to reduce collisions.
+"""
+
 class MyHashSet:
 
     def __init__(self):
