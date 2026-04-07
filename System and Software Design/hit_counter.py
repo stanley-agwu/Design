@@ -60,23 +60,23 @@ from collections import deque
 class HitCounter:
 
     def __init__(self):
-        self.q = deque()          # (timestamp, count)
+        self.queue = deque()          # (timestamp, count)
         self.total = 0
 
     def _remove_expired(self, timestamp: int) -> None:
         # Keep only hits in the last 300 seconds: [timestamp - 299, timestamp]
-        while self.q and self.q[0][0] <= timestamp - 300:
-            old_time, old_count = self.q.popleft()
+        while self.queue and self.queue[0][0] <= timestamp - 300:
+            _, old_count = self.queue.popleft()
             self.total -= old_count
 
     def hit(self, timestamp: int) -> None:
         self._remove_expired(timestamp)
 
-        if self.q and self.q[-1][0] == timestamp:
-            t, cnt = self.q[-1]
-            self.q[-1] = (t, cnt + 1)
+        if self.queue and self.queue[-1][0] == timestamp:
+            last_timestamp, last_count = self.queue[-1]
+            self.queue[-1] = (last_timestamp, last_count + 1)
         else:
-            self.q.append((timestamp, 1))
+            self.queue.append((timestamp, 1))
 
         self.total += 1
 
@@ -84,5 +84,6 @@ class HitCounter:
         self._remove_expired(timestamp)
         return self.total
     
-# Time complexity: O(1) for hit() and O(k) for get_hits() where k is the number of expired hits removed.
+# Time complexity: O(1) for hit() and O(k) ~ O(1) for get_hits() where k is 
+#   the number of expired hits removed (~300 hits).
 # Space complexity: O(n) where n is the number of hits in the last 300 seconds.
