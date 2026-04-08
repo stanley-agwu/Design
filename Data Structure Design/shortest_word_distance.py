@@ -1,27 +1,32 @@
 # Shortest Word Distance
 
 """
-Design a data structure that will be initialized with a string array, and then it should answer queries of the shortest distance between two different strings from the array.
+Design a data structure that will be initialized with a string array, and then 
+it should answer queries of the shortest distance between two different strings 
+from the array.
 
 Implement the WordDistance class:
 
-WordDistance(String[] wordsDict) initializes the object with the strings array wordsDict.
-int shortest(String word1, String word2) returns the shortest distance between word1 and word2 in the array wordsDict.
- 
+WordDistance(String[] wordsDict) initializes the object with the strings array 
+    wordsDict.
+int shortest(String word1, String word2) returns the shortest distance between 
+    word1 and word2 in the array wordsDict.
 
 Example 1:
 
 Input
 ["WordDistance", "shortest", "shortest"]
-[[["practice", "makes", "perfect", "coding", "makes"]], ["coding", "practice"], ["makes", "coding"]]
+[[["practice", "makes", "perfect", "coding", "makes"]], ["coding", "practice"], 
+["makes", "coding"]]
+
 Output
 [null, 3, 1]
 
 Explanation
-WordDistance wordDistance = new WordDistance(["practice", "makes", "perfect", "coding", "makes"]);
+WordDistance wordDistance = new WordDistance(["practice", "makes", "perfect", 
+    "coding", "makes"]);
 wordDistance.shortest("coding", "practice"); // return 3
 wordDistance.shortest("makes", "coding");    // return 1
- 
 
 Constraints:
 
