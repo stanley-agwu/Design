@@ -64,25 +64,25 @@ class EventManager:
 
     def __init__(self, events: list[list[int]]):
         self.heap = []
-        self.current = {}  # eventId -> current priority for active events
+        self.current = {}  # event_id -> current priority for active events
 
-        for eventId, priority in events:
-            self.current[eventId] = priority
-            heapq.heappush(self.heap, (-priority, eventId))
+        for event_id, priority in events:
+            self.current[event_id] = priority
+            heapq.heappush(self.heap, (-priority, event_id))
 
-    def updatePriority(self, eventId: int, newPriority: int) -> None:
-        self.current[eventId] = newPriority
-        heapq.heappush(self.heap, (-newPriority, eventId))
+    def update_priority(self, event_id: int, new_priority: int) -> None:
+        self.current[event_id] = new_priority
+        heapq.heappush(self.heap, (-new_priority, event_id))
 
-    def pollHighest(self) -> int:
+    def poll_highest(self) -> int:
         while self.heap:
-            neg_priority, eventId = heapq.heappop(self.heap)
+            neg_priority, event_id = heapq.heappop(self.heap)
             priority = -neg_priority
 
             # valid active entry
-            if eventId in self.current and self.current[eventId] == priority:
-                del self.current[eventId]
-                return eventId
+            if event_id in self.current and self.current[event_id] == priority:
+                del self.current[event_id]
+                return event_id
 
         return -1
     
