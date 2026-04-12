@@ -46,6 +46,33 @@ Constraints:
 At most 1000 calls will be made to allocate and freeMemory.
 """
 
+# Idea
+"""
+A simple and efficient solution for these constraints is to simulate the memory 
+array directly.
+
+Since:
+-> n <= 1000
+-> at most 1000 operations
+
+an O(n) scan for allocation and an O(n) scan for freeing are fully acceptable.
+
+Thus, we maintain an array:
+-> memory[i] = 0 means free
+-> memory[i] = mID means allocated to that id
+
+`allocate(size, mID)`
+Scan from left to right and look for the first contiguous block of size zeros.
+Once found, fill that range with mID and return the starting index.
+If no such block exists, return -1.
+
+`freeMemory(mID)`
+Scan the whole array. Every time memory[i] == mID, set it to 0 and count how many 
+units were freed.
+
+Return that count.
+"""
+
 class Allocator:
 
     def __init__(self, n: int):
@@ -54,34 +81,34 @@ class Allocator:
 
     def allocate(self, size: int, m_id: int) -> int:
         n = len(self.memory)
-        free_count = 0
+        free_space_count = 0
         start = 0
 
         for i in range(n):
             if self.memory[i] == 0:
-                if free_count == 0:
+                if free_space_count == 0:
                     start = i
-                free_count += 1
+                free_space_count += 1
 
-                if free_count == size:
-                    for j in range(start, start + size):
-                        self.memory[j] = m_id
+                if free_space_count == size:
+                    for space in range(start, start + size):
+                        self.memory[space] = m_id
                     return start
             else:
-                free_count = 0
+                free_space_count = 0
 
         return -1
 
     def free_memory(self, m_id: int) -> int:
-        freed = 0
+        freed_space_count = 0
 
         for i in range(len(self.memory)):
             if self.memory[i] == m_id:
                 self.memory[i] = 0
-                freed += 1
+                freed_space_count += 1
 
-        return freed
-    
+        return freed_space_count
+
 # Time complexity:
 # allocate: O(n) in the worst case when we have to scan the entire memory array
 # free_memory: O(n) in the worst case when all memory units have the same m_id
