@@ -96,7 +96,7 @@ Space Complexity: O(n) in the worst case, if all numbers are unique.
 # Alternative Approach:
 from collections import deque
 
-class FirstUnique:
+class FirstUniqueI:
 
     def __init__(self, nums: list[int]):
         self.q = deque()
