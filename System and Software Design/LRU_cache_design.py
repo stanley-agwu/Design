@@ -1,4 +1,4 @@
-# Cache System Design - LRU
+# LRU Cache
 # Design a Least Recently Used (LRU) Cache Data Structure
 
 # Design a data structure that follows the constraints of a Least Recently Used (LRU) cache.
@@ -71,8 +71,8 @@ class Node:
     def __init__(self, key: int, val: int):
         self.key = key
         self.val = val
-        self.prev = None
-        self.next = None
+        self.prev: Node | None = None
+        self.next: Node | None = None
 
 class LRUcache:
 
@@ -88,8 +88,10 @@ class LRUcache:
     # cache doubly linked list helper functions
     def _remove_node(self, node: Node) -> Node:
         prev_node, next_node = node.prev, node.next
-        prev_node.next = next_node
-        next_node.prev = prev_node
+        if prev_node:
+            prev_node.next = next_node
+        if next_node:
+            next_node.prev = prev_node
         node.prev = node.next = None
         return node
     
@@ -99,17 +101,19 @@ class LRUcache:
         self.head.next = node
         node.prev = self.head
         node.next = current_mru
-        current_mru.prev = node
+        if current_mru:
+            current_mru.prev = node
         return node
 
-    def _move_node_to_front(self, node: Node) -> None:
+    def _move_node_to_front(self, node: Node) -> Node:
         self._remove_node(node)
         self._add_to_front(node)
         return node
     
-    def _pop_lru(self) -> Node:
+    def _pop_lru(self) -> Node | None:
         lru_node = self.tail.prev
-        self._remove_node(lru_node)
+        if lru_node and lru_node != self.head: # Check if list is not empty
+            self._remove_node(lru_node)
         return lru_node
     
     # cache API
@@ -137,7 +141,8 @@ class LRUcache:
 
         if len(self.map) > self.capacity:
             lru_node = self._pop_lru() # Remove from linked list
-            del self.map[lru_node] # Remove key-value from Hash map
+            if lru_node:
+                del self.map[lru_node.key] # Remove key-value from Hash map
         return None
 
 # Complexities
